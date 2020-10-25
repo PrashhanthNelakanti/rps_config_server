@@ -5,6 +5,8 @@ import com.schwab.rps.com.schwab.rps.repo.EmailMetaDataRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -12,8 +14,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@RefreshScope
 @Service
 public class EmailMetaDataService {
+
+    @Value("${days}")
+    private Integer days;
 
     private static final Logger logger = LoggerFactory.getLogger(EmailMetaDataService.class);
 
@@ -24,6 +31,7 @@ public class EmailMetaDataService {
         logger.info("Inside class EmailMetaDataService meth getEmailMetaData along with Params:"+days+","+name);
         LocalDateTime date=LocalDateTime.now().minusDays(days);
         logger.info("The current_date is:"+date);
+        logger.info("The days are:"+this.days);
         //LocalDateTime final_date=LocalDateTime.(LocalDateTime.now().minusDays(days).getYear(),LocalDateTime.now().minusDays(days).getMonth(),LocalDateTime.now().minusDays(days).getDayOfMonth());
         //logger.info("The final_date is:"+final_date);
         return emailMetaDataRepo.findByEmailSentOnAfterAndAndName( (date),name);
